@@ -1,5 +1,5 @@
 <div class="p-6">
-  <div class="text-l">Add Ride for {{ today.toLocaleDateString() }}</div>
+  <div class="text-lg">Pick a Ride for {{ today.toLocaleDateString() }}</div>
 
   <form class="flex-col gap-2 w-50 mt-4" [formGroup]="form">
     <mat-form-field>
@@ -8,37 +8,16 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Vehicle Type</mat-label>
-      <mat-select formControlName="vehicle_type">
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Vehicle No</mat-label>
-      <input matInput formControlName="vehicle_no" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Vacant Seats</mat-label>
-      <input matInput formControlName="capacity" />
-    </mat-form-field>
-
-    <mat-form-field>
       <mat-label>Pick a time</mat-label>
-      <input matInput [matTimepicker]="picker" formControlName="time" />
+      <input matInput [matTimepicker]="picker" formControlName="time"  />
       <mat-timepicker-toggle matIconSuffix [for]="picker" />
       <mat-timepicker #picker />
     </mat-form-field>
 
-    <mat-form-field>
+     <mat-form-field>
       <mat-label>Pick-up Point</mat-label>
       <mat-select formControlName="pick_up">
-        <!-- Add Location -->
         <mat-option value="one">First option</mat-option>
-
-        <!-- Loop locations -->
         <mat-option value="two">Second option</mat-option>
       </mat-select>
     </mat-form-field>
@@ -46,14 +25,11 @@
     <mat-form-field>
       <mat-label>Destination</mat-label>
       <mat-select formControlName="destination">
-        <!-- Add Location -->
         <mat-option value="one">First option</mat-option>
-
-        <!-- Loop locations -->
         <mat-option value="two">Second option</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <button class="w-fit" matButton="filled" (click)="submit()">Submit</button>
+    <button matButton="filled" class="w-fit" (click)="submit()">Search For Rides</button>
   </form>
 </div>

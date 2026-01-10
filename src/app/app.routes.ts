@@ -8,5 +8,9 @@ export const routes: Routes = [
     {
         path : 'add-ride',
         loadComponent : () => import('./main/add-ride/add-ride-form.component').then(e => e.AddRideFormComponent)
+    },
+      {
+        path : 'join-ride',
+        loadComponent : () => import('./main/join-ride/join-ride-form.component').then(e => e.JoinRideFormComponent)
     }
 ];

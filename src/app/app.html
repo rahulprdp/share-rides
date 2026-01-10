@@ -1,5 +1,8 @@
 <div>
-  <div class="p-6 font-bold font-lg">Quick Rides</div>
+  <div class="p-6 font-bold text-lg flex-row items-center justify-between">
+    <div>Quick Rides</div>
+    <button class="ml-2" (click)="navigateToHome()" matMiniFab >Home</button>
+  </div>
   <div>
     <router-outlet></router-outlet>
   </div>
