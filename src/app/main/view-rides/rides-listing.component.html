@@ -1,4 +1,17 @@
-<div>
-    
+<div class="p-6">
+    <div>Rides</div>
+
+    <div class="mt-4">
+        @for (item of $data(); track $index) {
+            <div class="mt-4">
+                {{
+                    item.emp_id
+                }} - {{
+                    item.vehicle_no
+                }}
+            </div>
+        }
+
+    </div>
 
 </div>

@@ -1,59 +1,76 @@
 <div class="p-6">
-  <div class="text-l">Add Ride for {{ today.toLocaleDateString() }}</div>
-
+  @if(!this?.tripData){
+  <div class="text-lg font-bold">Add Ride for {{ today.toLocaleDateString() }}</div>
   <form class="flex-col gap-2 w-50 mt-4" [formGroup]="form">
     <mat-form-field>
       <mat-label>Employee ID</mat-label>
       <input matInput formControlName="emp_id" />
+      <mat-error>Employee ID is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Vehicle Type</mat-label>
       <mat-select formControlName="vehicle_type">
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
+        @for (item of VEHICLE_TYPES; track $index) {
+        <mat-option [value]="item.value">{{ item.label }}</mat-option>
+        }
       </mat-select>
+      <mat-error>Vehicle Type is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Vehicle No</mat-label>
       <input matInput formControlName="vehicle_no" />
+      <mat-error>Vehicle No is required</mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Vacant Seats</mat-label>
-      <input matInput formControlName="capacity" />
-    </mat-form-field>
+    <div>Capacity Selected - {{ form.controls.capacity.value }} (Max is 6)</div>
+    <mat-slider min="1" max="6" step="1" showTickMarks discrete [displayWith]="formatLabel">
+      <input matSliderThumb formControlName="capacity" />
+    </mat-slider>
 
     <mat-form-field>
       <mat-label>Pick a time</mat-label>
       <input matInput [matTimepicker]="picker" formControlName="time" />
       <mat-timepicker-toggle matIconSuffix [for]="picker" />
       <mat-timepicker #picker />
+      <mat-error>Time is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Pick-up Point</mat-label>
       <mat-select formControlName="pick_up">
         <!-- Add Location -->
-        <mat-option value="one">First option</mat-option>
-
-        <!-- Loop locations -->
-        <mat-option value="two">Second option</mat-option>
+        <mat-option value="one">Add Location</mat-option>
+        @for (item of locations; track $index) { @if(item?.type === 'PICK'){
+        <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
+        } }
       </mat-select>
+      <mat-error>Pick up point is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Destination</mat-label>
       <mat-select formControlName="destination">
         <!-- Add Location -->
-        <mat-option value="one">First option</mat-option>
+        <mat-option value="one">Add Location</mat-option>
 
-        <!-- Loop locations -->
-        <mat-option value="two">Second option</mat-option>
+        @for (item of locations; track $index) { @if(item?.type === 'DROP'){
+        <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
+        } }
       </mat-select>
+      <mat-error>Destination is required</mat-error>
     </mat-form-field>
 
     <button class="w-fit" matButton="filled" (click)="submit()">Submit</button>
   </form>
+  } @if(this?.tripData){
+  <div class="text-lg font-bold">Ride added Successfully</div>
+  <div class="flex-row gap-4 mt-4">
+    <button matButton="outlined" (click)="this.form.reset(); this.tripData = undefined">
+      Add New Ride
+    </button>
+    <button matButton="filled" (click)="navigateToView()">View Rides</button>
+  </div>
+  }
 </div>
