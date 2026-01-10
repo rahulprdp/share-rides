@@ -13,12 +13,24 @@
   } @if(mode === 'SEARCH'){
   <div class="text-lg">Showing you rides within 60 mins</div>
   <div class="mt-4">
+    <mat-form-field>
+      <mat-label>Vehicle Type</mat-label>
+      <mat-select [formControl]="filter">
+        @for (item of VEHICLE_TYPES; track $index) {
+        <mat-option [value]="item">{{ item.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button matButton class="ml-2" (click)="clearFilters()">clear</button>
+  </div>
+  <div class="mt-4">
     @for (item of $data(); track $index) {
     <div class="mt-4">
       <app-ride-card [mode]="'SEARCH'" [data]="item" (action)="joinRide(item)"></app-ride-card>
     </div>
     } @if (!$data().length) {
-    <div class="mt-4">No Rides Found in the time range</div>
+    <div class="mt-4">No Rides Found in the time range or Filters</div>
     }
   </div>
   }

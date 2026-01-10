@@ -1,6 +1,6 @@
-import { LocationInfo } from "../interfaces/ride.interface";
+import { LocationInfo, VehicleType } from "../interfaces/ride.interface";
 
-export const VEHICLE_TYPES = [
+export const VEHICLE_TYPES : VehicleType[] = [
   {
     label: 'Motor Cycle',
     value: 1,

@@ -48,10 +48,7 @@ export class AddRideFormComponent {
       nonNullable : true,
       validators : [Validators.required]
     }),
-    vehicle_type: new FormControl<VehicleType>( {
-      label : '',
-      value : ''
-    } , {
+    vehicle_type: new FormControl<VehicleType | undefined>( undefined, {
       nonNullable : true,
       validators : [Validators.required],
     }),

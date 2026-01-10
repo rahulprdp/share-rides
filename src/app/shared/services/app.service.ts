@@ -59,8 +59,9 @@ export class AppService {
        return of(true)
     }
     
-    public getAllRides(){
-         return of(this.local.get('X_RIDES'))
+    public getAllRides(type ?: number){
+        const data = this.local.get('X_RIDES')?.filter((val : any)=> type ? val?.vehicle_type?.value == type : true)
+        return of(data)
     }
 
     public setLocations(data : LocationInfo[]){
