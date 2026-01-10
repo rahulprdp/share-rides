@@ -1,17 +1,25 @@
-<div class="p-6">
-    <div>Rides</div>
-
-    <div class="mt-4">
-        @for (item of $data(); track $index) {
-            <div class="mt-4">
-                {{
-                    item.emp_id
-                }} - {{
-                    item.vehicle_no
-                }}
-            </div>
-        }
-
+<div class="p-6 w-50">
+  @if(mode === 'VIEW'){
+  <div class="text-lg">Your Trips</div>
+  <div class="mt-4">
+    @if (!$data().length) {
+    <div class="mt-4">No Rides Found.</div>
+    } @for (item of $data(); track $index) {
+    <div class="p-4">
+      <app-ride-card [data]="item"></app-ride-card>
     </div>
-
+    }
+  </div>
+  } @if(mode === 'SEARCH'){
+  <div class="text-lg">Showing you rides within 60 mins</div>
+  <div class="mt-4">
+    @for (item of $data(); track $index) {
+    <div class="mt-4">
+      <app-ride-card [mode]="'SEARCH'" [data]="item" (action)="joinRide(item)"></app-ride-card>
+    </div>
+    } @if (!$data().length) {
+    <div class="mt-4">No Rides Found in the time range</div>
+    }
+  </div>
+  }
 </div>

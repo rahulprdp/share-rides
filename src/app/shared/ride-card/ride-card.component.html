@@ -1,0 +1,21 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ data()?.vehicle_type?.label }} - {{ data()?.vehicle_no }}</mat-card-title>
+    <mat-card-subtitle>{{ data()?.passengers?.length || 0 }} / {{ data()?.capacity }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    {{ data()?.pick_up?.label }} to {{ data()?.destination?.label }}
+  </mat-card-content>
+  <mat-card-actions>
+    @if(mode() == 'SEARCH'){
+    <button
+      matButton
+      (click)="action.emit()"
+      [disabled]="(data()?.capacity || 0) <= (data()?.passengers?.length || 0)"
+    >
+      @if((data()?.capacity || 0) <= (data()?.passengers?.length || 0)){ Ride is full } @else { Join
+      Ride }
+    </button>
+    }
+  </mat-card-actions>
+</mat-card>

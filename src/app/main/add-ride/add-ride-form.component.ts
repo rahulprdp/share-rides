@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { VEHICLE_TYPES } from '../../shared/data/data';
 import { AppService } from '../../shared/services/app.service';
-import { LocationInfo, TripData } from '../../shared/interfaces/ride.interface';
+import { LocationInfo, TripData, VehicleType } from '../../shared/interfaces/ride.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -48,9 +48,12 @@ export class AddRideFormComponent {
       nonNullable : true,
       validators : [Validators.required]
     }),
-    vehicle_type: new FormControl('', {
+    vehicle_type: new FormControl<VehicleType>( {
+      label : '',
+      value : ''
+    } , {
       nonNullable : true,
-      validators : [Validators.required]
+      validators : [Validators.required],
     }),
     vehicle_no: new FormControl('', {
       nonNullable : true,
@@ -64,11 +67,11 @@ export class AddRideFormComponent {
       nonNullable : true,
       validators : [Validators.required]
     }),
-    pick_up: new FormControl('', {
+    pick_up: new FormControl<LocationInfo | undefined>(undefined, {
       nonNullable : true,
       validators : [Validators.required]
     }),
-    destination: new FormControl('', {
+    destination: new FormControl<LocationInfo | undefined>(undefined, {
       nonNullable : true,
       validators : [Validators.required]
     }
@@ -77,10 +80,10 @@ export class AddRideFormComponent {
 
   public submit() {
     if (this.form.valid) {
-      // Check if EMP id present in rides
-      
-      this.tripData = this.form.getRawValue();
-      this.app.addToUserTrip(this.form.getRawValue());
+      this.tripData = {
+        ...this.form.getRawValue() 
+      }
+      this.app.addTrip(this.form.getRawValue());
     }
   }
 
@@ -89,6 +92,10 @@ export class AddRideFormComponent {
   }
 
   public navigateToView(){
-    this.router.navigate(['/view-rides'])
+    this.router.navigate(['/view-rides'],{
+      queryParams : {
+        mode : 'VIEW'
+      }
+    })
   }
 }

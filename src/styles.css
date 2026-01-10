@@ -35,6 +35,10 @@ body { margin: 0;  font-family: "Poppins", sans-serif; }
     width: 100%;
 }
 
+.p-4 {
+    padding: 16px;
+}
+
 .p-6 {
     padding: 24px;
 }

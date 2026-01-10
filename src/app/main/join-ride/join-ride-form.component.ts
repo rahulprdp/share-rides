@@ -1,5 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { AppService } from '../../shared/services/app.service';
 import { LocationInfo } from '../../shared/interfaces/ride.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-join-ride-form',
@@ -25,20 +32,45 @@ import { LocationInfo } from '../../shared/interfaces/ride.interface';
   providers: [provideNativeDateAdapter()],
 })
 export class JoinRideFormComponent {
-  public app = inject(AppService);
-  public locations : LocationInfo[] = this.app.getLocations();
+  private router = inject(Router);
+  private app = inject(AppService);
+  public locations: LocationInfo[] = this.app.getLocations();
 
   public today = new Date();
   public form = new FormGroup({
-    emp_id: new FormControl(''),
-    time: new FormControl(''),
-    pick_up: new FormControl(''),
-    destination: new FormControl(''),
+    emp_id: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    time: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    pick_up: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    destination: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
-  public submit(){
-    if(this.form.valid){
-      //
+  public submit() {
+    if (this.form.valid) {
+      this.app.setUser({
+        emp_id: this.form.getRawValue()?.emp_id,
+      });
+      this.naviagateToSearch();
     }
+  }
+
+  private naviagateToSearch() {
+    this.router.navigate(['/view-rides'], {
+      queryParams: {
+        mode: 'SEARCH',
+        ...this.form.getRawValue(),
+      },
+    });
   }
 }

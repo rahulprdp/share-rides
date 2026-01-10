@@ -5,6 +5,7 @@
     <mat-form-field>
       <mat-label>Employee ID</mat-label>
       <input matInput formControlName="emp_id" />
+      <mat-error>Employee ID is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -12,6 +13,7 @@
       <input matInput [matTimepicker]="picker" formControlName="time" />
       <mat-timepicker-toggle matIconSuffix [for]="picker" />
       <mat-timepicker #picker />
+      <mat-error>Time is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -21,6 +23,7 @@
         <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
         } }
       </mat-select>
+      <mat-error>Pick-up point is required</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -30,6 +33,7 @@
         <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
         } }
       </mat-select>
+      <mat-error>Destination is required</mat-error>
     </mat-form-field>
 
     <button matButton="filled" class="w-fit" (click)="submit()">Search For Rides</button>
