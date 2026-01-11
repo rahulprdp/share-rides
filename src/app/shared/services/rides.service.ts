@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { TripData, UserData, RideData, LocationInfo } from '../interfaces/ride.interface';
+import { TripData, UserData, RideData, LocationInfo, RideFilters } from '../interfaces/ride.interface';
 import { AppService } from './app.service';
 
 @Injectable({
@@ -44,31 +44,25 @@ export class RidesService {
   }
 
   public updateRide(ride: RideData) {
-    let rides = this.app.getRides().filter((val: any) => val?.id != ride?.id);
+    let rides = this.app.getRides().filter((val: RideData) => val?.id != ride?.id);
     rides = [ride, ...rides];
     this.app.setRides(rides);
 
     return of(true);
   }
 
-  public getAllRides(filters: {
-    vehicle_type?: number;
-    time?: string;
-    emp_id?: string;
-    pick_up?: string;
-    destination?: string;
-  }) {
-    const data = this.app.getRides()?.filter((val: any) => {
+  public getAllRides(filters: RideFilters) {
+    const data = this.app.getRides()?.filter((val: RideData) => {
       const typeMatch = filters?.vehicle_type
         ? val?.vehicle_type?.value == filters.vehicle_type
         : true;
-      const timeMatch = filters?.time ? this.isWithinRange(val.time, filters.time) : true;
+      const timeMatch = filters?.time ? this.isWithinRange(val.time || '', filters.time) : true;
       const empMatch = filters?.emp_id ? val.emp_id == filters.emp_id : true;
       const pickUpMatch = filters?.pick_up ? val?.pick_up?.id == filters.pick_up : true;
       const destinationMatch = filters?.destination
         ? val?.destination?.id == filters.destination
         : true;
-      const isToday = this.isToday(val.time);
+      const isToday = this.isToday(val.time || '');
 
       return isToday && typeMatch && timeMatch && empMatch && pickUpMatch && destinationMatch;
     });

@@ -1,5 +1,5 @@
 <div class="p-6">
-  @if(mode === 'VIEW'){
+  @if(appliedFilters?.mode === 'VIEW'){
   <div class="text-lg">Your Trips on {{ today.toLocaleDateString() }}</div>
   <div class="mt-4">
     @if (!$data().length) {
@@ -10,8 +10,8 @@
     </div>
     }
   </div>
-  } @if(mode === 'SEARCH'){
-  <div class="text-lg">Showing you rides within 60 mins on {{ today.toLocaleDateString() }}</div>
+  } @if(appliedFilters?.mode === 'SEARCH'){
+  <div class="text-lg">Sh owing you rides within 60 mins on {{ today.toLocaleDateString() }}</div>
   <div class="mt-4 flex-row gap-4 items-center">
     <mat-form-field>
       <mat-label>Vehicle Type</mat-label>
@@ -22,7 +22,7 @@
       </mat-select>
     </mat-form-field>
 
-     <mat-form-field>
+    <mat-form-field>
       <mat-label>Pick-up Point</mat-label>
       <mat-select [formControl]="filterForm.controls.pick_up">
         @for (item of $locations(); track $index) { @if(item?.type === 'PICK'){

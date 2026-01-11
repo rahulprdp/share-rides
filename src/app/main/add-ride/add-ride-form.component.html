@@ -32,8 +32,8 @@
     <mat-form-field>
       <mat-label>Pick a time</mat-label>
       <input matInput [matTimepicker]="picker" formControlName="time" />
-      <mat-timepicker-toggle matIconSuffix [for]="picker"  />
-      <mat-timepicker #picker/>
+      <mat-timepicker-toggle matIconSuffix [for]="picker" />
+      <mat-timepicker #picker />
       <mat-error>Time is required</mat-error>
     </mat-form-field>
 
@@ -59,7 +59,7 @@
 
     <div class="mt-2 flex-row items-center">
       <div>Cant find your Location?</div>
-      <button matButton (click)="openAddLocation()" > Add Location </button>
+      <button matButton (click)="openAddLocation()">Add Location</button>
     </div>
 
     <button class="w-fit" matButton="filled" (click)="submit()">Submit</button>

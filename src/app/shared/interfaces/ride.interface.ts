@@ -36,3 +36,12 @@ export interface TripData {
   destination?: LocationInfo;
   passengers?: UserData[];
 }
+
+export interface RideFilters {
+  mode?: 'SEARCH' | 'VIEW';
+  vehicle_type?: number;
+  time?: string;
+  emp_id?: string;
+  pick_up?: string;
+  destination?: string;
+}

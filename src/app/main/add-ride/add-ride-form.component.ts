@@ -99,9 +99,9 @@ export class AddRideFormComponent implements OnInit {
       })
       .afterClosed()
       .subscribe({
-        next: (res : LocationInfo[] | undefined) => {
-          if(res){
-            this.$locations.set(res)
+        next: (res: LocationInfo[] | undefined) => {
+          if (res) {
+            this.$locations.set(res);
           }
         },
       });
@@ -125,7 +125,7 @@ export class AddRideFormComponent implements OnInit {
     this.router.navigate(['/view-rides'], {
       queryParams: {
         mode: 'VIEW',
-        emp_id : this.form.getRawValue()?.emp_id
+        emp_id: this.form.getRawValue()?.emp_id,
       },
     });
   }

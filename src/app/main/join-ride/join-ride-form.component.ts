@@ -32,12 +32,12 @@ import { AuthService } from '../../shared/services/auth.service';
   ],
   providers: [provideNativeDateAdapter()],
 })
-export class JoinRideFormComponent  implements OnInit{
+export class JoinRideFormComponent implements OnInit {
   private router = inject(Router);
   private _rides = inject(RidesService);
   private _auth = inject(AuthService);
 
-    public $locations = signal<LocationInfo[]>([]);
+  public $locations = signal<LocationInfo[]>([]);
   public today = new Date();
   public form = new FormGroup({
     emp_id: new FormControl('', {
@@ -47,9 +47,8 @@ export class JoinRideFormComponent  implements OnInit{
     time: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
-    })
+    }),
   });
-
 
   ngOnInit(): void {
     this.getRideLocations();
@@ -68,18 +67,18 @@ export class JoinRideFormComponent  implements OnInit{
   public submit() {
     if (this.form.valid) {
       this._auth.setUser(this.form.getRawValue()).subscribe({
-        next : ()=>{
-          this.naviagateToSearch()
-        }
-      })
+        next: () => {
+          this.navigateToSearch();
+        },
+      });
     }
   }
-
-  private naviagateToSearch() {
+  
+  private navigateToSearch() {
     this.router.navigate(['/view-rides'], {
       queryParams: {
         mode: 'SEARCH',
-        time : this.form.getRawValue()?.time
+        time: this.form.getRawValue()?.time,
       },
     });
   }

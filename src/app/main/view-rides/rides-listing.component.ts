@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   LocationInfo,
   RideData,
+  RideFilters,
   UserData,
 } from '../../shared/interfaces/ride.interface';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,17 +41,16 @@ export class RidesListingComponent implements OnInit {
   private _rides = inject(RidesService);
   private _auth = inject(AuthService);
 
-  public mode: 'SEARCH' | 'VIEW' = this.route.snapshot.queryParams['mode'] || 'VIEW';
-  public appliedFilters?: any = this.route.snapshot.queryParams;
+  public appliedFilters?: RideFilters = this.route.snapshot.queryParams;
 
   public $data = signal<RideData[]>([]);
   public $locations = signal<LocationInfo[]>([]);
   public $userData = signal<UserData | undefined>(undefined);
 
   public filterForm = new FormGroup({
-    vehicle_type: new FormControl<number | null>(null),
-    pick_up: new FormControl(''),
-    destination: new FormControl(''),
+    vehicle_type: new FormControl<number | undefined>(undefined, { nonNullable: true }),
+    pick_up: new FormControl('', { nonNullable: true }),
+    destination: new FormControl('', { nonNullable: true }),
   });
 
   ngOnInit(): void {
@@ -101,6 +101,7 @@ export class RidesListingComponent implements OnInit {
     this._rides.updateRide(ride).subscribe({
       next: () => {
         this.getRidesList();
+        this._notify.open('You have successfully joined the ride!');
       },
     });
   }
@@ -128,7 +129,7 @@ export class RidesListingComponent implements OnInit {
     });
   }
 
-  private updateParams(data?: any) {
+  private updateParams(data?: RideFilters) {
     this.appliedFilters = {
       ...this.appliedFilters,
       ...data,
@@ -136,7 +137,6 @@ export class RidesListingComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route.firstChild,
       queryParams: {
-        mode: this.mode,
         ...this.appliedFilters,
       },
       replaceUrl: true,
