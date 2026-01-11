@@ -45,15 +45,7 @@ export class JoinRideFormComponent {
     time: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
-    }),
-    pick_up: new FormControl<LocationInfo | undefined>(undefined, {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    destination: new FormControl<LocationInfo | undefined>(undefined, {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+    })
   });
 
   public submit() {
@@ -69,7 +61,7 @@ export class JoinRideFormComponent {
     this.router.navigate(['/view-rides'], {
       queryParams: {
         mode: 'SEARCH',
-       
+        time : this.form.getRawValue()?.time
       },
     });
   }

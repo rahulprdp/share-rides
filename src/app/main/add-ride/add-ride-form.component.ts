@@ -91,8 +91,10 @@ export class AddRideFormComponent  implements OnInit{
   public submit() {
     if (this.form.valid) {
       this.tripData = {
-        ...this.form.getRawValue() 
+        ...this.form.getRawValue(),
+        time : new Date(this.form.getRawValue()?.time || '').toLocaleString()
       }
+      console.log(this.tripData)
       this._rides.addTrip(this.form.getRawValue());
     }
   }

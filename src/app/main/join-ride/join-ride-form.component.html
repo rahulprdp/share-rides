@@ -16,26 +16,6 @@
       <mat-error>Time is required</mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Pick-up Point</mat-label>
-      <mat-select formControlName="pick_up">
-        @for (item of locations; track $index) { @if(item?.type === 'PICK'){
-        <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
-        } }
-      </mat-select>
-      <mat-error>Pick-up point is required</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Destination</mat-label>
-      <mat-select formControlName="destination">
-        @for (item of locations; track $index) { @if(item?.type === 'DROP'){
-        <mat-option [value]="item?.id">{{ item?.label }}</mat-option>
-        } }
-      </mat-select>
-      <mat-error>Destination is required</mat-error>
-    </mat-form-field>
-
     <button matButton="filled" class="w-fit" (click)="submit()">Search For Rides</button>
   </form>
 </div>

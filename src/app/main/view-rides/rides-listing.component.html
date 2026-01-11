@@ -1,11 +1,11 @@
-<div class="p-6 w-50">
+<div class="p-6">
   @if(mode === 'VIEW'){
   <div class="text-lg">Your Trips</div>
   <div class="mt-4">
     @if (!$data().length) {
     <div class="mt-4">No Rides Found.</div>
     } @for (item of $data(); track $index) {
-    <div class="p-4">
+    <div class="p-4 w-50">
       <app-ride-card [data]="item"></app-ride-card>
     </div>
     }
@@ -26,7 +26,7 @@
   </div>
   <div class="mt-4">
     @for (item of $data(); track $index) {
-    <div class="mt-4">
+    <div class="mt-4 w-50">
       <app-ride-card [mode]="'SEARCH'" [data]="item" (action)="joinRide(item)"></app-ride-card>
     </div>
     } @if (!$data().length) {

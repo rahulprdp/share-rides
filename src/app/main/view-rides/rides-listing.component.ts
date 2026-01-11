@@ -36,6 +36,7 @@ export class RidesListingComponent implements OnInit {
   private _auth = inject(AuthService);
 
   public mode: 'SEARCH' | 'VIEW' = this.route.snapshot.queryParams['mode'] || 'VIEW';
+  public appliedFilters ?: any;
 
   public $data = signal<RideData[]>([]);
   public $userData = signal<UserData | undefined>(undefined);
@@ -57,6 +58,7 @@ export class RidesListingComponent implements OnInit {
 
     this.route.queryParams.subscribe({
       next: (res) => {
+        this.appliedFilters = res;
         this.getRidesList(parseInt(res['vehicle_type'] || ''));
       },
     });
@@ -102,7 +104,7 @@ export class RidesListingComponent implements OnInit {
 
   public isWithinRange(timeStr1: string) {
     const date1: Date = new Date(timeStr1);
-    const date2: Date = new Date(this.$userData()?.time || '');
+    const date2: Date = new Date(this.appliedFilters?.time || '');
 
     const diffMs = Math.abs(date1.getTime() - date2.getTime());
     const diffMinutes = diffMs / (1000 * 60);
