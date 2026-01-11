@@ -36,7 +36,7 @@ export class RidesListingComponent implements OnInit {
   private _auth = inject(AuthService);
 
   public mode: 'SEARCH' | 'VIEW' = this.route.snapshot.queryParams['mode'] || 'VIEW';
-  public appliedFilters ?: any;
+  public appliedFilters ?: any = this.route.snapshot.queryParams;
 
   public $data = signal<RideData[]>([]);
   public $userData = signal<UserData | undefined>(undefined);
@@ -59,22 +59,18 @@ export class RidesListingComponent implements OnInit {
     this.route.queryParams.subscribe({
       next: (res) => {
         this.appliedFilters = res;
-        this.getRidesList(parseInt(res['vehicle_type'] || ''));
+        this.getRidesList();
       },
     });
   }
 
-  public getRidesList(vehichle_type?: number) {
-    this._rides.getAllRides(vehichle_type).subscribe({
+  public getRidesList() {
+    this._rides.getAllRides({
+      ...this.appliedFilters
+    }).subscribe({
       next: (res: RideData[]) => {
         this.$data.set(
-          res.filter((val) => {
-            if (this.mode === 'SEARCH' && val?.time) {
-              return this.isWithinRange(val.time);
-            } else {
-              return val?.emp_id === this.$userData()?.emp_id;
-            }
-          })
+          res
         );
       },
     });
@@ -100,16 +96,6 @@ export class RidesListingComponent implements OnInit {
         this.getRidesList();
       },
     });
-  }
-
-  public isWithinRange(timeStr1: string) {
-    const date1: Date = new Date(timeStr1);
-    const date2: Date = new Date(this.appliedFilters?.time || '');
-
-    const diffMs = Math.abs(date1.getTime() - date2.getTime());
-    const diffMinutes = diffMs / (1000 * 60);
-    const isWithinRange = diffMinutes <= 60;
-    return isWithinRange;
   }
 
   public clearFilters() {
