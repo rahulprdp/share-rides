@@ -40,8 +40,6 @@
     <mat-form-field>
       <mat-label>Pick-up Point</mat-label>
       <mat-select formControlName="pick_up">
-        <!-- Add Location -->
-        <mat-option value="one">Add Location</mat-option>
         @for (item of $locations(); track $index) { @if(item?.type === 'PICK'){
         <mat-option [value]="item">{{ item?.label }}</mat-option>
         } }
@@ -52,15 +50,17 @@
     <mat-form-field>
       <mat-label>Destination</mat-label>
       <mat-select formControlName="destination">
-        <!-- Add Location -->
-        <mat-option value="one">Add Location</mat-option>
-
         @for (item of $locations(); track $index) { @if(item?.type === 'DROP'){
         <mat-option [value]="item">{{ item?.label }}</mat-option>
         } }
       </mat-select>
       <mat-error>Destination is required</mat-error>
     </mat-form-field>
+
+    <div class="mt-2 flex-row items-center">
+      <div>Cant find your Location?</div>
+      <button matButton (click)="openAddLocation()" > Add Location </button>
+    </div>
 
     <button class="w-fit" matButton="filled" (click)="submit()">Submit</button>
   </form>

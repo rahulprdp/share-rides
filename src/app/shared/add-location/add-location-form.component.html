@@ -1,8 +1,22 @@
-<div>
-    <div>Add Location</div>
+<div class="p-6">
+  <div>Add Location</div>
 
-    <form>
+  <form class="flex-col gap-2  mt-4" [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="label" />
+      <mat-error>Location is required</mat-error>
+    </mat-form-field>
 
-        <button></button>
-    </form>
+    <mat-form-field>
+      <mat-label>Location Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option [value]=" 'PICK' "> Pick Up </mat-option>
+        <mat-option [value]=" 'DROP' "> Drop </mat-option>
+      </mat-select>
+      <mat-error>Vehicle Type is required</mat-error>
+    </mat-form-field>
+
+    <button matButton="outlined" class="w-fit" (click)="submit()" >Add Location</button>
+  </form>
 </div>

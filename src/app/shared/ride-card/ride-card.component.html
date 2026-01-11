@@ -1,7 +1,7 @@
 <mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title>{{ data()?.vehicle_type?.label }} - {{ data()?.vehicle_no }}</mat-card-title>
-    <mat-card-subtitle>{{ data()?.passengers?.length || 0 }} / {{ data()?.capacity }}</mat-card-subtitle>
+    <mat-card-subtitle> Seats {{ data()?.passengers?.length || 0 }} / {{ data()?.capacity }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
      <div> {{ data()?.pick_up?.label }} to {{ data()?.destination?.label }} </div>

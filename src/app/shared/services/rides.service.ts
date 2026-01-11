@@ -57,4 +57,13 @@ export class RidesService {
       ?.filter((val: any) => (type ? val?.vehicle_type?.value == type : true));
     return of(data);
   }
+
+  public addLocation(data : LocationInfo){
+    const locations = this.app.getLocations() || []
+    locations.push(data)
+    
+    this.app.setLocations(locations)
+
+    return of(locations)
+  }
 }

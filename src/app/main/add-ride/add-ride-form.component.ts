@@ -17,6 +17,8 @@ import { VEHICLE_TYPES } from '../../shared/data/data';
 import { LocationInfo, TripData, VehicleType } from '../../shared/interfaces/ride.interface';
 import { Router } from '@angular/router';
 import { RidesService } from '../../shared/services/rides.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddLocationFormComponent } from '../../shared/add-location/add-location-form.component';
 
 @Component({
   selector: 'app-add-ride-form',
@@ -34,67 +36,83 @@ import { RidesService } from '../../shared/services/rides.service';
     MatSliderModule,
   ],
 })
-export class AddRideFormComponent  implements OnInit{
-  private router = inject(Router)
+export class AddRideFormComponent implements OnInit {
+  private router = inject(Router);
   private _rides = inject(RidesService);
 
   public today = new Date();
   public VEHICLE_TYPES = VEHICLE_TYPES;
-  public $locations = signal<LocationInfo[]>([])
-  public tripData ?: TripData;
+  public $locations = signal<LocationInfo[]>([]);
+  public tripData?: TripData;
+
+  readonly dialog = inject(MatDialog);
 
   public form = new FormGroup({
     emp_id: new FormControl('', {
-      nonNullable : true,
-      validators : [Validators.required]
+      nonNullable: true,
+      validators: [Validators.required],
     }),
-    vehicle_type: new FormControl<VehicleType | undefined>( undefined, {
-      nonNullable : true,
-      validators : [Validators.required],
+    vehicle_type: new FormControl<VehicleType | undefined>(undefined, {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     vehicle_no: new FormControl('', {
-      nonNullable : true,
-      validators : [Validators.required]
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     capacity: new FormControl(1, {
-      nonNullable : true,
-      validators : [Validators.required]
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     time: new FormControl(null, {
-      validators : [Validators.required]
+      validators: [Validators.required],
     }),
     pick_up: new FormControl<LocationInfo | undefined>(undefined, {
-      nonNullable : true,
-      validators : [Validators.required]
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     destination: new FormControl<LocationInfo | undefined>(undefined, {
-      nonNullable : true,
-      validators : [Validators.required]
-    }
-    ),
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   ngOnInit(): void {
-    this.getRideLocations()
+    this.getRideLocations();
   }
 
-  public getRideLocations(){
+  public getRideLocations() {
     this._rides.getAllLocations().subscribe({
-      next : (res)=>{
-        if(res){
-          this.$locations.set(res)
+      next: (res) => {
+        if (res) {
+          this.$locations.set(res);
         }
-      }
-    })
+      },
+    });
+  }
+
+  public openAddLocation() {
+    this.dialog
+      .open(AddLocationFormComponent, {
+        height: '400px',
+        width: '600px',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (res : LocationInfo[] | undefined) => {
+          if(res){
+            this.$locations.set(res)
+          }
+        },
+      });
   }
 
   public submit() {
     if (this.form.valid) {
       this.tripData = {
         ...this.form.getRawValue(),
-        time : new Date(this.form.getRawValue()?.time || '').toLocaleString()
-      }
-      console.log(this.tripData)
+        time: new Date(this.form.getRawValue()?.time || '').toLocaleString(),
+      };
       this._rides.addTrip(this.form.getRawValue());
     }
   }
@@ -103,11 +121,11 @@ export class AddRideFormComponent  implements OnInit{
     return `${value}`;
   }
 
-  public navigateToView(){
-    this.router.navigate(['/view-rides'],{
-      queryParams : {
-        mode : 'VIEW'
-      }
-    })
+  public navigateToView() {
+    this.router.navigate(['/view-rides'], {
+      queryParams: {
+        mode: 'VIEW',
+      },
+    });
   }
 }
