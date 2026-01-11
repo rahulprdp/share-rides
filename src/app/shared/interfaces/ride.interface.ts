@@ -31,7 +31,7 @@ export interface TripData {
   vehicle_type?: VehicleType;
   vehicle_no: string;
   capacity: number;
-  time: string;
+  time: string | null;
   pick_up?: LocationInfo;
   destination?: LocationInfo;
   passengers?: UserData[];

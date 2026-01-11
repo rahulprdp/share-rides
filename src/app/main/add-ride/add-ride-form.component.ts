@@ -1,4 +1,4 @@
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -14,9 +14,9 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { VEHICLE_TYPES } from '../../shared/data/data';
-import { AppService } from '../../shared/services/app.service';
 import { LocationInfo, TripData, VehicleType } from '../../shared/interfaces/ride.interface';
 import { Router } from '@angular/router';
+import { RidesService } from '../../shared/services/rides.service';
 
 @Component({
   selector: 'app-add-ride-form',
@@ -34,13 +34,13 @@ import { Router } from '@angular/router';
     MatSliderModule,
   ],
 })
-export class AddRideFormComponent {
-  public app = inject(AppService);
-  public router = inject(Router)
+export class AddRideFormComponent  implements OnInit{
+  private router = inject(Router)
+  private _rides = inject(RidesService);
 
   public today = new Date();
   public VEHICLE_TYPES = VEHICLE_TYPES;
-  public locations : LocationInfo[] = this.app.getLocations();
+  public $locations = signal<LocationInfo[]>([])
   public tripData ?: TripData;
 
   public form = new FormGroup({
@@ -60,8 +60,7 @@ export class AddRideFormComponent {
       nonNullable : true,
       validators : [Validators.required]
     }),
-    time: new FormControl('', {
-      nonNullable : true,
+    time: new FormControl(null, {
       validators : [Validators.required]
     }),
     pick_up: new FormControl<LocationInfo | undefined>(undefined, {
@@ -75,12 +74,26 @@ export class AddRideFormComponent {
     ),
   });
 
+  ngOnInit(): void {
+    this.getRideLocations()
+  }
+
+  public getRideLocations(){
+    this._rides.getAllLocations().subscribe({
+      next : (res)=>{
+        if(res){
+          this.$locations.set(res)
+        }
+      }
+    })
+  }
+
   public submit() {
     if (this.form.valid) {
       this.tripData = {
         ...this.form.getRawValue() 
       }
-      this.app.addTrip(this.form.getRawValue());
+      this._rides.addTrip(this.form.getRawValue());
     }
   }
 

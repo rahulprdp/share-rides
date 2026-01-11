@@ -4,7 +4,8 @@
     <mat-card-subtitle>{{ data()?.passengers?.length || 0 }} / {{ data()?.capacity }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    {{ data()?.pick_up?.label }} to {{ data()?.destination?.label }}
+     <div> {{ data()?.pick_up?.label }} to {{ data()?.destination?.label }} </div>
+     <div> {{  data()?.time | timeFormat }} </div>
   </mat-card-content>
   <mat-card-actions>
     @if(mode() == 'SEARCH'){

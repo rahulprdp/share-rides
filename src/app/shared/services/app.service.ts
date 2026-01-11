@@ -17,51 +17,12 @@ export class AppService {
         return this.local.get('X_USER')
     }
 
-    public addTrip(data : TripData){
-        if(this.getUser()?.emp_id != data.emp_id){
-            this.setUser({
-            emp_id : data.emp_id
-            })
-        }
-
-        const userData : UserData = {
-            emp_id : data.emp_id
-        }
-
-        const rideData : RideData = {
-            ...data,
-            passengers : [],
-            id : crypto.randomUUID()
-        }   
-
-        const userTrips = this.getUser()?.trips ? this.getUser()?.trips : []
-        userTrips.push(rideData);
-        userData['trips'] = userTrips;
-        this.setUser(userData);
-
-        const allTrips = this.local.get('X_RIDES') ? this.local.get('X_RIDES') : []
-        this.local.set('X_RIDES', [...allTrips, rideData]);
-    }
-
     public setRides(data : RideData[]){
         this.local.set('X_RIDES', data);
     }
 
     public getRides(){
         return this.local.get('X_RIDES')||[]
-    }
-
-    public updateRide(ride : RideData){
-       let rides = this.getRides().filter((val : any)=> val?.id != ride?.id)
-       rides = [ride,...rides]
-       this.setRides(rides)
-
-       return of(true)
-    }
-    
-    public getAllRides(type ?: number){
-        const data = this.local.get('X_RIDES')?.filter((val : any)=> type ? val?.vehicle_type?.value == type : true)
-        return of(data)
     }
 
     public setLocations(data : LocationInfo[]){

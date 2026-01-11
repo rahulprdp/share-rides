@@ -32,8 +32,8 @@
     <mat-form-field>
       <mat-label>Pick a time</mat-label>
       <input matInput [matTimepicker]="picker" formControlName="time" />
-      <mat-timepicker-toggle matIconSuffix [for]="picker" />
-      <mat-timepicker #picker />
+      <mat-timepicker-toggle matIconSuffix [for]="picker"  />
+      <mat-timepicker #picker/>
       <mat-error>Time is required</mat-error>
     </mat-form-field>
 
@@ -42,7 +42,7 @@
       <mat-select formControlName="pick_up">
         <!-- Add Location -->
         <mat-option value="one">Add Location</mat-option>
-        @for (item of locations; track $index) { @if(item?.type === 'PICK'){
+        @for (item of $locations(); track $index) { @if(item?.type === 'PICK'){
         <mat-option [value]="item">{{ item?.label }}</mat-option>
         } }
       </mat-select>
@@ -55,7 +55,7 @@
         <!-- Add Location -->
         <mat-option value="one">Add Location</mat-option>
 
-        @for (item of locations; track $index) { @if(item?.type === 'DROP'){
+        @for (item of $locations(); track $index) { @if(item?.type === 'DROP'){
         <mat-option [value]="item">{{ item?.label }}</mat-option>
         } }
       </mat-select>
