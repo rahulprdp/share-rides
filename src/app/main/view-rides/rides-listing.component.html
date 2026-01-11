@@ -1,6 +1,6 @@
 <div class="p-6">
   @if(mode === 'VIEW'){
-  <div class="text-lg">Your Trips</div>
+  <div class="text-lg">Your Trips on {{ today.toLocaleDateString() }}</div>
   <div class="mt-4">
     @if (!$data().length) {
     <div class="mt-4">No Rides Found.</div>
@@ -11,7 +11,7 @@
     }
   </div>
   } @if(mode === 'SEARCH'){
-  <div class="text-lg">Showing you rides within 60 mins</div>
+  <div class="text-lg">Showing you rides within 60 mins on {{ today.toLocaleDateString() }}</div>
   <div class="mt-4 flex-row gap-4 items-center">
     <mat-form-field>
       <mat-label>Vehicle Type</mat-label>

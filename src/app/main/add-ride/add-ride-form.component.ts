@@ -125,6 +125,7 @@ export class AddRideFormComponent implements OnInit {
     this.router.navigate(['/view-rides'], {
       queryParams: {
         mode: 'VIEW',
+        emp_id : this.form.getRawValue()?.emp_id
       },
     });
   }

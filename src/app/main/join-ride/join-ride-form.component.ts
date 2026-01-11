@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,9 +12,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { AppService } from '../../shared/services/app.service';
 import { LocationInfo } from '../../shared/interfaces/ride.interface';
 import { Router } from '@angular/router';
+import { RidesService } from '../../shared/services/rides.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-join-ride-form',
@@ -31,11 +32,12 @@ import { Router } from '@angular/router';
   ],
   providers: [provideNativeDateAdapter()],
 })
-export class JoinRideFormComponent {
+export class JoinRideFormComponent  implements OnInit{
   private router = inject(Router);
-  private app = inject(AppService);
-  public locations: LocationInfo[] = this.app.getLocations();
+  private _rides = inject(RidesService);
+  private _auth = inject(AuthService);
 
+    public $locations = signal<LocationInfo[]>([]);
   public today = new Date();
   public form = new FormGroup({
     emp_id: new FormControl('', {
@@ -48,12 +50,28 @@ export class JoinRideFormComponent {
     })
   });
 
+
+  ngOnInit(): void {
+    this.getRideLocations();
+  }
+
+  public getRideLocations() {
+    this._rides.getAllLocations().subscribe({
+      next: (res) => {
+        if (res) {
+          this.$locations.set(res);
+        }
+      },
+    });
+  }
+
   public submit() {
     if (this.form.valid) {
-      this.app.setUser({
-         ...this.form.getRawValue()
-      });
-      this.naviagateToSearch();
+      this._auth.setUser(this.form.getRawValue()).subscribe({
+        next : ()=>{
+          this.naviagateToSearch()
+        }
+      })
     }
   }
 

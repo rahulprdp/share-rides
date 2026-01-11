@@ -11,7 +11,11 @@ export class AuthService{
     
     public getCurrentUser() : Observable<UserData | undefined>{
         const data = this.app.getUser()
+        return of(data)
+    }
 
+    public setUser( data : UserData) : Observable<UserData | undefined>{
+        this.app.setUser(data);
         return of(data)
     }
 }

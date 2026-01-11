@@ -17,9 +17,7 @@ export class App {
 
   constructor(){
     const data = this.app.getLocations()
-    if(data){
-      this.app.setLocations(data)
-    } else {
+    if(!data){
        this.app.setLocations(LOCATIONS)
     }
   }

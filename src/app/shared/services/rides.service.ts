@@ -51,8 +51,13 @@ export class RidesService {
     return of(true);
   }
 
-
-  public getAllRides(filters: { vehicle_type?: number; time?: string; emp_id?: string ; pick_up ?: string, destination ?:string}) {
+  public getAllRides(filters: {
+    vehicle_type?: number;
+    time?: string;
+    emp_id?: string;
+    pick_up?: string;
+    destination?: string;
+  }) {
     const data = this.app.getRides()?.filter((val: any) => {
       const typeMatch = filters?.vehicle_type
         ? val?.vehicle_type?.value == filters.vehicle_type
@@ -60,9 +65,12 @@ export class RidesService {
       const timeMatch = filters?.time ? this.isWithinRange(val.time, filters.time) : true;
       const empMatch = filters?.emp_id ? val.emp_id == filters.emp_id : true;
       const pickUpMatch = filters?.pick_up ? val?.pick_up?.id == filters.pick_up : true;
-      const destinationMatch = filters?.destination ? val?.destination?.id == filters.destination : true;
+      const destinationMatch = filters?.destination
+        ? val?.destination?.id == filters.destination
+        : true;
+      const isToday = this.isToday(val.time);
 
-      return typeMatch && timeMatch && empMatch && pickUpMatch && destinationMatch;
+      return isToday && typeMatch && timeMatch && empMatch && pickUpMatch && destinationMatch;
     });
 
     return of(data);
@@ -76,6 +84,17 @@ export class RidesService {
     const diffMinutes = diffMs / (1000 * 60);
     const isWithinRange = diffMinutes <= 60;
     return isWithinRange;
+  }
+
+  private isToday(dateStr: string): boolean {
+    const date = new Date(dateStr);
+    const today = new Date();
+
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
   public addLocation(data: LocationInfo) {

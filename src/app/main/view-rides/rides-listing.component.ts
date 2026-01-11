@@ -1,5 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { LocationInfo, RideData, UserData, VehicleType } from '../../shared/interfaces/ride.interface';
+import {
+  LocationInfo,
+  RideData,
+  UserData,
+} from '../../shared/interfaces/ride.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +32,7 @@ import { NotifyService } from '../../shared/services/notify.service';
 })
 export class RidesListingComponent implements OnInit {
   public VEHICLE_TYPES = VEHICLE_TYPES;
+  public today = new Date();
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -36,17 +41,17 @@ export class RidesListingComponent implements OnInit {
   private _auth = inject(AuthService);
 
   public mode: 'SEARCH' | 'VIEW' = this.route.snapshot.queryParams['mode'] || 'VIEW';
-  public appliedFilters ?: any = this.route.snapshot.queryParams;
+  public appliedFilters?: any = this.route.snapshot.queryParams;
 
   public $data = signal<RideData[]>([]);
   public $locations = signal<LocationInfo[]>([]);
   public $userData = signal<UserData | undefined>(undefined);
 
   public filterForm = new FormGroup({
-    vehicle_type : new FormControl<number | null>(null),
-    pick_up : new FormControl(''),
-    destination : new FormControl('')
-  })
+    vehicle_type: new FormControl<number | null>(null),
+    pick_up: new FormControl(''),
+    destination: new FormControl(''),
+  });
 
   ngOnInit(): void {
     this._auth.getCurrentUser().subscribe({
@@ -67,25 +72,25 @@ export class RidesListingComponent implements OnInit {
   }
 
   public getRidesList() {
-    this._rides.getAllRides({
-      ...this.appliedFilters
-    }).subscribe({
-      next: (res: RideData[]) => {
-        this.$data.set(
-          res
-        );
-      },
-    });
-  }
-
-  private checkIfJoined(ride: RideData) {
-    const user = ride.passengers?.find((val) => val.emp_id === this.$userData()?.emp_id);
-    return user ? true : false;
+    this._rides
+      .getAllRides({
+        ...this.appliedFilters,
+      })
+      .subscribe({
+        next: (res: RideData[]) => {
+          this.$data.set(res);
+        },
+      });
   }
 
   public joinRide(ride: RideData) {
-    if (this.checkIfJoined(ride)) {
-      this._notify.open('You have already joined the ride!')
+    if (ride?.emp_id === this.$userData()?.emp_id) {
+      this._notify.open('You are the owner of this trip!');
+      return;
+    }
+
+    if (ride.passengers?.find((val) => val.emp_id === this.$userData()?.emp_id)) {
+      this._notify.open('You have already joined the ride!');
       return;
     }
 
@@ -100,7 +105,7 @@ export class RidesListingComponent implements OnInit {
     });
   }
 
-    public getRideLocations() {
+  public getRideLocations() {
     this._rides.getAllLocations().subscribe({
       next: (res) => {
         if (res) {
@@ -123,16 +128,16 @@ export class RidesListingComponent implements OnInit {
     });
   }
 
-  private updateParams(data ?: any) {
+  private updateParams(data?: any) {
     this.appliedFilters = {
       ...this.appliedFilters,
-      ...data
-    }
+      ...data,
+    };
     this.router.navigate([], {
       relativeTo: this.route.firstChild,
       queryParams: {
         mode: this.mode,
-        ...this.appliedFilters
+        ...this.appliedFilters,
       },
       replaceUrl: true,
       queryParamsHandling: 'replace',
