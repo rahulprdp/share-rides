@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RideData, UserData, VehicleType } from '../../shared/interfaces/ride.interface';
+import { LocationInfo, RideData, UserData, VehicleType } from '../../shared/interfaces/ride.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RideCardComponent } from '../../shared/ride-card/ride-card.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { VEHICLE_TYPES } from '../../shared/data/data';
 import { RidesService } from '../../shared/services/rides.service';
@@ -39,8 +39,14 @@ export class RidesListingComponent implements OnInit {
   public appliedFilters ?: any = this.route.snapshot.queryParams;
 
   public $data = signal<RideData[]>([]);
+  public $locations = signal<LocationInfo[]>([]);
   public $userData = signal<UserData | undefined>(undefined);
-  public filter = new FormControl<VehicleType | undefined>(undefined);
+
+  public filterForm = new FormGroup({
+    vehicle_type : new FormControl<number | null>(null),
+    pick_up : new FormControl(''),
+    destination : new FormControl('')
+  })
 
   ngOnInit(): void {
     this._auth.getCurrentUser().subscribe({
@@ -48,13 +54,9 @@ export class RidesListingComponent implements OnInit {
         this.$userData.set(res);
         this.getRidesList();
         this.filterChanges();
+        this.getRideLocations();
       },
     });
-
-    const data = this.route.snapshot.queryParams['mode']
-      ? this.getVehicleType(this.route.snapshot.queryParams['vehicle_type'])
-      : undefined;
-    this.filter.setValue(data);
 
     this.route.queryParams.subscribe({
       next: (res) => {
@@ -98,33 +100,42 @@ export class RidesListingComponent implements OnInit {
     });
   }
 
+    public getRideLocations() {
+    this._rides.getAllLocations().subscribe({
+      next: (res) => {
+        if (res) {
+          this.$locations.set(res);
+        }
+      },
+    });
+  }
+
   public clearFilters() {
-    this.filter.setValue(undefined);
-    this.updateParams();
+    this.filterForm.reset();
+    this.updateParams(this.filterForm.getRawValue());
   }
 
   public filterChanges() {
-    this.filter.valueChanges.subscribe({
+    this.filterForm.valueChanges.subscribe({
       next: (res) => {
         if (res) this.updateParams(res);
       },
     });
   }
 
-  private updateParams(data?: VehicleType) {
+  private updateParams(data ?: any) {
+    this.appliedFilters = {
+      ...this.appliedFilters,
+      ...data
+    }
     this.router.navigate([], {
       relativeTo: this.route.firstChild,
       queryParams: {
         mode: this.mode,
-        vehicle_type: data?.value,
+        ...this.appliedFilters
       },
       replaceUrl: true,
       queryParamsHandling: 'replace',
     });
-  }
-
-  private getVehicleType(type: number): VehicleType | undefined {
-    const data = VEHICLE_TYPES.find((val) => val.value == type);
-    return data;
   }
 }
